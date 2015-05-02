@@ -36,7 +36,7 @@ if (class_exists($controllerClassName)) {
         die ('Error: cannot find action.');
     }
 } else {
-    $controllerFileName = 'controllers/' . $controllerClassName . '.php';
+    $controllerFileName = 'controllers/' . $controllerClassName . 'register.php';
     die ('Error: cannot find controller: ' . $controllerFileName);
 }
 

@@ -67,6 +67,7 @@ class BaseModel {
         return $results;
     }
 
+
     protected function processResults( $result_set ) {
         $results = array();
 
