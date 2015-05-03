@@ -1,5 +1,6 @@
 <?php
 session_start();
+// TODO set time of session.
 
 include_once('config/db.php');
 

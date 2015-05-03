@@ -24,7 +24,7 @@ class BaseModel {
         $this->columns = $args['columns'];
         $this->limit = $args['limit'];
 
-        include "lib/Database.php";
+        include_once "lib/Database.php";
 
         $db = Database::getInstance();
         $this->db = $db::getDb();

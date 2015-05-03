@@ -13,4 +13,11 @@ class CategoryController  extends BaseController{
     }
 
 
+    public function view($categoryId) {
+        $this->topics = $this->categoriesModel->getAllTopicsByCategoryId($categoryId);
+
+    }
+
+
+
 } 

@@ -13,11 +13,12 @@ class UserController extends BaseController {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            $userId = $this->db->register($username, $password);
+            $userData = $this->db->register($username, $password);
 
-            if ($userId) {
+            if ($userData) {
                 $_SESSION['username'] = $username;
-                $_SESSION['userId'] = $userId;
+                $_SESSION['userId'] = $userData['userId'];
+                $this->isAdmin = $userData['isAdmin'];
 
                 $this->redirect('home');
             }
@@ -31,11 +32,13 @@ class UserController extends BaseController {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            $userId = $this->db->login($username, $password);
+            $userData = $this->db->login($username, $password);
 
-            if ($userId) {
+            if ($userData) {
                 $_SESSION['username'] = $username;
-                $_SESSION['userId'] = $userId;
+                $_SESSION['userId'] = $userData['userid'];
+                $this->isAdmin = $userData['isAdmin'];
+                $this->redirectToUrl('/');
                 // TODO $this->redirect()
             } else {
                 // TODO error msg
@@ -48,5 +51,10 @@ class UserController extends BaseController {
     public function logout() {
         unset($_SESSION['username']);
         unset($_SESSION['userId']);
+        $this->isLoggedIn = false;
+
+        $this->redirectToUrl('/');
+
+        // TODO redirect and msg.
     }
 } 

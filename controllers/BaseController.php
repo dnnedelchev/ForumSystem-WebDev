@@ -8,6 +8,7 @@ class BaseController {
     protected $isPost = false;
     protected $user;
     protected $isLoggedIn;
+    protected $isAdmin;
 
     public function __construct($controller, $action) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -60,6 +61,7 @@ class BaseController {
             $controller = $this->controller;
         }
         $url = "/$controller/$action";
+
         $paramsUrlEncoded = array_map('urlencode', $params);
         $paramsJoined = implode('/', $paramsUrlEncoded);
         if ($paramsJoined != '') {
@@ -68,6 +70,12 @@ class BaseController {
         $this->redirectToUrl($url);
     }
 
+
+    public function authorize() {
+        if (!$this->isLoggedIn) {
+            $this->redirect('user', 'login');
+        }
+    }
 
 
 }

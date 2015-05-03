@@ -6,7 +6,7 @@ class UserModel extends BaseModel {
     }
 
     public function register($username, $password) {
-        $statement = $this->db->prepare("SELECT id FROM users WHERE username = ?");
+        $statement = $this->db->prepare("SELECT id, isAdmin FROM users WHERE username = ?");
         $statement->bind_param('s', $username);
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
@@ -25,7 +25,7 @@ class UserModel extends BaseModel {
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
 
-        return $result['id'];
+        return array('userid' => $result['id'], 'isAdmin' => $result['isAdmin']);
     }
 
     public function login($username, $password) {
@@ -35,7 +35,7 @@ class UserModel extends BaseModel {
         $result = $statement->get_result()->fetch_assoc();
 
         if (password_verify($password, $result['pass_hash'])) {
-            return $result['id'];
+            return array('userid' => $result['id'], 'isAdmin' => $result['isAdmin']);
         }
 
         return false;

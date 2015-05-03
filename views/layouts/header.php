@@ -2,28 +2,33 @@
 <html>
 
 <head>
-    <!--link rel="stylesheet" href="../../content/styles/bootstrap.css" /-->
-    <title><?php echo htmlspecialchars($this->title) ?></title>
+    <link rel="stylesheet" href="../../content/styles/bootstrap.css" />
+    <title>TITLE</title>
 </head>
 
 <body>
 <header>
-    <a href="/"><img src="/content/images/site-logo.png"></a>
-    <div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header"></div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/">Home</a></li>
-                    <li><a href="/authors">Categories</a></li>
-                    <li><a href="/books">Topics</a></li>
+                    <li><a href="/category">Categories</a></li>
+                    <li><a href="/topic">Topics</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>Login</li>
-                    <li>Register</li>
+                <?php if($this->isLoggedIn) : ?>
+                    <li><?php echo 'Welcome ' , $_SESSION['username']; ?></li>
+                    <li><a href="/user/logout">Logout</a></li>
+                <?php else : ?>
+                    <li><a href="/user/login">Login</a></li>
+                    <li><a href="/user/register">Register</a></li>
+                <?php endif; ?>
                 </ul>
             </div>
         </div>
     </div>
 </header>
+<div class="container">
 
