@@ -71,7 +71,6 @@ class BaseModel {
 
     protected function processResults( $result_set ) {
         $results = array();
-
         if( ! empty( $result_set ) && $result_set->num_rows > 0) {
             while($row = $result_set->fetch_assoc()) {
                 $results[] = $row;

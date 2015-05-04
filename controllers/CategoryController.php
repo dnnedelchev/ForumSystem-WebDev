@@ -6,6 +6,7 @@ class CategoryController  extends BaseController{
 
     protected function onInit() {
         $this->categoriesModel = new CategoryModel(array('table' => 'categories'));
+        $this->topicModel = new TopicModel(array('table' => 'topics'));
     }
 
     public function index() {
@@ -13,9 +14,11 @@ class CategoryController  extends BaseController{
     }
 
 
-    public function view($categoryId) {
-        $this->topics = $this->categoriesModel->getAllTopicsByCategoryId($categoryId);
+    public function view($categoryId, $page) {
+        $this->topics = $this->categoriesModel->getAllTopicsByCategoryId($categoryId, $page);
+        $this->topicAnswerCount = $this->topicModel->getTopicsAnswerCount();
 
+        $this->renderView(__FUNCTION__);
     }
 
 

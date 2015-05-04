@@ -3,9 +3,14 @@
 class UserController extends BaseController {
     protected $db;
 
+    protected $isCurrentUser;
 
     public function onInit() {
         $this->db = new UserModel(array('table' => 'users'));
+    }
+
+    public function index() {
+        $this->redirect('user', 'view');
     }
 
     public function register() {
@@ -57,4 +62,51 @@ class UserController extends BaseController {
 
         // TODO redirect and msg.
     }
+
+    public function view() {
+        if (func_num_args() === 1) {
+            $username = func_get_args()[0];
+        } elseif (func_num_args() === 0) {
+            $username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "";
+        } else {
+            die("Лошо");
+        }
+
+        if ($_SESSION['username'] === $username) {
+            $this->isCurrentUser = true;
+
+            $this->currentUser = $this->db->getUserInformationByUserId($_SESSION['userId']);
+
+        } else {
+            $this->currentUser = $this->db->getUserInformationByUsername($username);
+        }
+
+        $this->renderView(__FUNCTION__);
+    }
+
+
+    public function edit() {
+        $this->authorize();
+
+        if ($this->isPost) {
+
+            $editedProfile = array('username' => $_POST['username'],
+                                   'name' => $_POST['personal_name'],
+                                   'email' => $_POST['email'],
+                                   'skype' => $_POST['skype'],
+                                   'birthdate' => new DateTime($_POST['birthdate']));
+
+            $result = $this->db->editUserProfile($_SESSION['userId'], $editedProfile);
+
+            if ($result) {
+                $_SESSION['username'] = $_POST['username'];
+                $this->redirect('user', 'view', array($_POST['username']));
+            }
+        }
+
+        $this->currentUser = $this->db->getUserInformationByUserId($_SESSION['userId']);
+
+        $this->renderView(__FUNCTION__);
+    }
+
 } 

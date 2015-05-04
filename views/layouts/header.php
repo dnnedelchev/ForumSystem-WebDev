@@ -19,7 +19,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if($this->isLoggedIn) : ?>
-                <li><a href="/user/view/<?= $_SESSION['userId']; ?>"><?= 'Welcome ' , $_SESSION['username']; ?></a></li>
+                <li><a href="/user/view/<?= $_SESSION['username']; ?>"><?= 'Welcome ' , $_SESSION['username']; ?></a></li>
                 <li><a href="/user/logout">Logout</a></li>
             <?php else : ?>
                 <li><a href="/user/login">Login</a></li>

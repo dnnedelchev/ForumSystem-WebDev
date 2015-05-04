@@ -4,8 +4,11 @@ class TopicController extends BaseController {
 
     private $topicsModel;
 
+    private $usersModel;
+
     protected function onInit() {
         $this->topicsModel = new TopicModel(array('table' => 'topics'));
+        $this->usersModel = new UserModel(array('table' => 'users'));
     }
 
     public function index() {
@@ -24,7 +27,7 @@ class TopicController extends BaseController {
 
 
     protected function getCountOfUserAnswers($userId) {
-        return 20;
+        return $this->usersModel->getCountOfUserAnswersByUserId($userId);
     }
 
 } 
