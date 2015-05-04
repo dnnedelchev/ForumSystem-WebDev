@@ -13,14 +13,18 @@ class TopicController extends BaseController {
     }
 
 
-    public function view($topicId) {
+    public function view($topicId, $page) {
 
-        $this->topicContent = $this->topicsModel->get($topicId)[0];
-
-        $this->answers = $this->topicsModel->getAllAnswersByTopicId($topicId);
+        $this->topic = $this->topicsModel->get($topicId)[0];
+        $this->answers = $this->topicsModel->getAllAnswersByTopicId($topicId, $page);
 
         $this->renderView(__FUNCTION__);
 
+    }
+
+
+    protected function getCountOfUserAnswers($userId) {
+        return 20;
     }
 
 } 

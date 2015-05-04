@@ -6806,3 +6806,7 @@ a.list-group-item-danger.active:focus {
 #jumbo {
     padding: 5px 20px;
 }
+
+body {
+    padding-top: 70px;
+}

@@ -1,13 +1,19 @@
 <div class="row">
-    <div class="col-md-3">
-        <ul>
+    <div class="col-md-4">
         <?php foreach($this->categories as $category) :?>
-            <li><a href="category/view/<?= $category['id']; ?>"><?= $category['name']; ?></a></li>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><a href="category/view/<?= $category['id']?>"><?= $category['name']?></a></h3>
+            </div>
+            <div class="panel-body">
+                <?= $category['description']?>
+            </div>
+        </div>
         <?php endforeach;?>
-        </ul>
+
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-8">
     <?php
         foreach($this->topics as $topic) : ?>
         <?php

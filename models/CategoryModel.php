@@ -7,7 +7,7 @@ class CategoryModel extends BaseModel {
 
     public function getAllCategoriesOrderedById() {
         $statement = $this->db->prepare("
-            SELECT id, name
+            SELECT id, name, description
             FROM categories
             ORDER BY id;
         ");

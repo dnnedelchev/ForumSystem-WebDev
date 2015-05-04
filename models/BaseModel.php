@@ -1,6 +1,7 @@
 <?php
 
 class BaseModel {
+    const DEFAULT_PAGE_SIZE = 10;
 
     protected $table;
     protected $where;

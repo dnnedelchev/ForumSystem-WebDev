@@ -5,13 +5,18 @@ class TopicModel extends BaseModel {
         parent::__construct($args);
     }
 
-    public function getAllAnswersByTopicId($topicId) {
+    public function getAllAnswersByTopicId($topicId, $page) {
         $statement = $this->db->prepare("
-               SELECT a.id, t.title, a.content , a.topic_id, a.user_id
+                SELECT a.id, t.title, a.content , a.topic_id, a.user_id, au.username AS answer_username
                 FROM topics AS t JOIN answers AS a
-                    ON t.id = a.topic_id
-                WHERE t.id = ?");
-        $statement->bind_param("i", $topicId);
+                    ON t.id = a.topic_id RIGHT JOIN users AS au
+                    ON a.user_id = au.id
+                WHERE t.id = ?
+                LIMIT ?, ?
+                ");
+        $size = 10;
+        $page = ($page - 1)  * $size;
+        $statement->bind_param("iii", $topicId,  $page, $size );
         $statement->execute();
         $results = $this->processResults($statement->get_result());
 
@@ -27,8 +32,9 @@ class TopicModel extends BaseModel {
                 ON t.id = a.topic_id JOIN users AS tu
                 ON t.user_id = tu.id JOIN users AS au
                 ON a.user_id = au.id
+            GROUP BY t.id
             ORDER BY a.publish_date DESC
-            LIMIT 10;
+            LIMIT 10
         ");
 
         $statement->execute();
