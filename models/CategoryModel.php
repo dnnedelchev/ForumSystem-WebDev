@@ -41,6 +41,8 @@ class CategoryModel extends BaseModel {
         $statement->execute();
         $results = $this->processResults($statement->get_result());
 
+
+
         return $results;
     }
 } 

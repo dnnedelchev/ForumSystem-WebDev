@@ -7,12 +7,13 @@ class TopicModel extends BaseModel {
 
     public function getAllAnswersByTopicId($topicId, $page) {
         $statement = $this->db->prepare("
-                SELECT a.id, t.title, a.content , a.topic_id, a.user_id AS answer_user_id,
-                       au.username AS answer_username, au.registration_date
+                SELECT a.id AS answer_id, t.title, a.content , a.topic_id, a.user_id AS answer_user_id,
+                       au.username AS answer_username, au.registration_date, a.publish_date
                 FROM topics AS t JOIN answers AS a
                     ON t.id = a.topic_id RIGHT JOIN users AS au
                     ON a.user_id = au.id
                 WHERE t.id = ?
+                ORDER BY a.publish_date ASC
                 LIMIT ?, ?
                 ");
         $size = BaseModel::DEFAULT_PAGE_SIZE;
@@ -64,5 +65,24 @@ class TopicModel extends BaseModel {
         }
 
         return $topicAnswerCount;
+    }
+
+    public function getTopicLastPageNumberById($topicId) {
+        $statement = $this->db->prepare("
+            SELECT count(a.id) AS results
+            FROM topics AS t JOIN answers AS a
+                ON t.id = a.topic_id
+            WHERE t.id = ?
+        ");
+
+        $statement->bind_param('i', $topicId);
+
+        $statement->execute();
+
+        $result = $this->processResults($statement->get_result())[0];
+
+        $lastPageNumber = intval($result['results'] / 10) + 1;
+
+        return $lastPageNumber;
     }
 } 

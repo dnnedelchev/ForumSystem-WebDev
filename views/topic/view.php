@@ -7,10 +7,10 @@
         $registrationDate = new DateTime($answer['registration_date']);
         ?>
 
-<div class="row">
+<div class="row" id="<?= $answer['answer_id'];?>" >
     <div class="col-md-9">
         <div class="jumbotron" id="jumbo">
-            <h6>Added at: 2012-10-10 16:48</h6>
+            <h6>Added at: <?= $answer['publish_date']; ?></h6>
             <p><?= $answer['content'] ?></p>
         </div>
     </div>
