@@ -21,6 +21,8 @@
             $lastAnswerPublishDate = new DateTime($topic['publish_date']);
             //var_dump($topic['answer_id']);die;
             $topicCreatedDate = new DateTime($topic['topic_created_at']);
+
+            $lastPageNumber = $this->getTopicLastPageNumberById($topic['topic_id']);
         ?>
         <div class="jumbotron" id="jumbo">
 
@@ -41,9 +43,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <?php if ($topic['answer_id'] === null): ?>
-                        <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>">Last answer</a>: No answers in this topic yet.</h4>
+                        <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>/1">Last answer</a>: No answers in this topic yet.</h4>
                     <?php else: ?>
-                        <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= $topic['answer_username']; ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
+                        <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>/<?= $lastPageNumber;?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= $topic['answer_username']; ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
                     <?php endif; ?>
                 </div>
             </div>

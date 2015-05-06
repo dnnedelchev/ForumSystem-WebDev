@@ -77,5 +77,9 @@ class BaseController {
         }
     }
 
+    protected function getTopicLastPageNumberById($topicId) {
+        $topicModel = new TopicModel(array('table' => 'topics'));
+        return $topicModel->getTopicLastPageNumberById($topicId);
+    }
 
 }

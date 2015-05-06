@@ -17,12 +17,10 @@ class CategoryController  extends BaseController{
     public function view($categoryId, $page) {
         $this->topics = $this->categoriesModel->getAllTopicsByCategoryId($categoryId, $page);
         $this->topicAnswerCount = $this->topicModel->getTopicsAnswerCount();
+        $this->currentPage = intval($page);
+        $this->categoryId = intval($categoryId);
 
         $this->renderView(__FUNCTION__);
-    }
-
-    protected function getTopicLastPageNumberById($topicId) {
-        return $this->topicModel->getTopicLastPageNumberById($topicId);
     }
 
 } 

@@ -25,6 +25,14 @@ class TopicController extends BaseController {
 
     }
 
+    public function create() {
+        if ($this->isPost) {
+            var_dump("peshooo");die;
+        }
+
+        $this->renderView(__FUNCTION__);
+    }
+
 
     protected function getCountOfUserAnswers($userId) {
         return $this->usersModel->getCountOfUserAnswersByUserId($userId);

@@ -34,8 +34,13 @@ class TopicModel extends BaseModel {
                 ON t.id = a.topic_id LEFT JOIN users AS tu
                 ON t.user_id = tu.id LEFT JOIN users AS au
                 ON a.user_id = au.id
+            WHERE a.publish_date = (SELECT publish_date
+                FROM answers
+                WHERE topic_id = t.id
+                ORDER BY publish_date DESC
+                LIMIT 1) OR a.topic_id IS NULL
             GROUP BY t.id
-            ORDER BY a.publish_date DESC, t.created_at DESC
+            ORDER BY publish_date DESC, t.created_at DESC
             LIMIT 10
         ");
 
@@ -74,9 +79,7 @@ class TopicModel extends BaseModel {
                 ON t.id = a.topic_id
             WHERE t.id = ?
         ");
-
         $statement->bind_param('i', $topicId);
-
         $statement->execute();
 
         $result = $this->processResults($statement->get_result())[0];

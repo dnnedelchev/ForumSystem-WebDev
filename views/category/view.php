@@ -3,11 +3,11 @@
 <!--        <li><a href="/topic/view/--><?//= $topic['id'] ?><!--">--><?//= $topic['title'] ?><!--</a></li>-->
 <!--    --><?php ////endforeach?>
 <!--</ul>-->
-
+<div class="row">
 <?php
 foreach($this->topics as $topic) : ?>
     <?php
-    $lastAnswerPublishDate = new DateTime($topic['publish_date']);
+    $lastAnswerPublishDate = new DateTime($topic['lastAnswerPublishDate']);
     $topicCreatedDate = new DateTime($topic['topic_created_at']);
 
     $lastPageNumber = $this->getTopicLastPageNumberById($topic['topic_id']);
@@ -34,7 +34,7 @@ foreach($this->topics as $topic) : ?>
                         <?php if ($topic['answer_id'] === null): ?>
                             <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>/1">Last answer</a>: No answers in this topic yet.</h4>
                         <?php else: ?>
-                            <h4 class="text-info"><a class="text-info" href="/topic/view/<?php echo $lastPageNumber . "/" .  $topic['topic_id']; ?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= $topic['answer_username']; ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
+                            <h4 class="text-info"><a class="text-info" href="/topic/view/<?php echo $topic['topic_id'] . "/" .  $lastPageNumber; ?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= $topic['answer_username']; ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -49,3 +49,48 @@ foreach($this->topics as $topic) : ?>
 
     </div>
 <?php endforeach; ?>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <ul class="pagination pagination-lg">
+    <?php
+    $isStartDisabledClass = '';
+    $isEndDisabledClass = '';
+    if ($this->currentPage === 1) {
+        $isStartDisabledClass = 'class="disabled"';
+    }
+    if ($this->currentPage === $lastPageNumber) {
+        $isEndDisabledClass = 'class="disabled"';
+    }
+    ?>
+    <li <?= $isStartDisabledClass?>><a href="/category/view/<?=$this->categoryId;?>/1">«</a></li>
+<?php
+if ($this->currentPage <= 5) {
+    $startIndex = 1;
+} elseif($this->currentPage + 5 >= $lastPageNumber) {
+    $startIndex = $lastPageNumber - 5;
+}
+
+$endIndex = ($startIndex + 5 >= $lastPageNumber) ? $lastPageNumber : $startIndex + 5;
+?>
+<?php for ($i = $startIndex; $i <= $endIndex; $i += 1 ) :?>
+    <?php
+    if ($this->currentPage === $i) {
+        $isActiveClass = 'class="active"';
+    } else {
+        $isActiveClass = '';
+    } ?>
+    <li <?= $isActiveClass; ?>><a href="/category/view/<?=$this->categoryId;?>/<?= $i;?>"><?= $i?></a></li>
+
+<?php endfor ?>
+    <li><a href="/category/view/<?=$this->categoryId;?>/<?= $lastPageNumber;?>" <?= $isEndDisabledClass?>>»</a></li>
+</ul>
+    </div>
+    <div class="col-md-6">
+        <div class="pager">
+            <a href="/topic/create" class="btn btn-primary btn-lg pull-right">Add new topic.</a>
+        </div>
+    </div>
+
+</div>

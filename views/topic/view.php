@@ -24,8 +24,6 @@
     </div>
 </div>
 
-
-
     <?php endforeach; ?>
 
 <!--a href="/answer/create/<?php// $this->topicContent['id']; ?>">Add new answer.</a-->

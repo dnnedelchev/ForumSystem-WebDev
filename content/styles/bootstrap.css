@@ -6810,3 +6810,7 @@ a.list-group-item-danger.active:focus {
 body {
     padding-top: 70px;
 }
+
+textarea {
+    resize: vertical;
+}
