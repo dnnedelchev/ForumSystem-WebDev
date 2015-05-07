@@ -29,7 +29,7 @@ class TopicModel extends BaseModel {
         $statement = $this->db->prepare("
             SELECT t.title, t.id AS topic_id, t.created_at AS topic_created_at, t.user_id AS topic_user_id,
                    tu.username AS topic_username, au.username AS answer_username, a.publish_date,
-                   a.user_id AS answer_user_id, t.answers_counter, a.id AS answer_id, t.views_counter
+                   a.user_id AS answer_user_id, a.id AS answer_id, t.views_counter
             FROM topics AS t LEFT JOIN answers AS a
                 ON t.id = a.topic_id LEFT JOIN users AS tu
                 ON t.user_id = tu.id LEFT JOIN users AS au
@@ -87,5 +87,39 @@ class TopicModel extends BaseModel {
         $lastPageNumber = intval($result['results'] / 10) + 1;
 
         return $lastPageNumber;
+    }
+
+    public function addNewTopic($topicTitle, $topicContent, $categoryId, $userId) {
+
+        $statement = $this->db->prepare("
+            INSERT INTO topics (title, category_id, created_at, user_id, views_counter, content)
+            VALUES (?, ?, NOW(), ?, 0, ?);
+        ");
+
+        $statement->bind_param('siis',$topicTitle, intval($categoryId), $userId, $topicContent);
+        $statement->execute();
+
+        if ($statement->insert_id) {
+            return $statement->insert_id;
+        } else {
+            return false;
+        }
+    }
+
+    public function getTopicInfo($topicId) {
+        $statement = $this->db->prepare("
+        SELECT t.id AS topic_id, t.title, t.category_id, t.created_at, t.user_id, t.content,
+               u.username, u.registration_date
+        FROM topics AS t JOIN users AS u
+            ON t.user_id = u.id
+        WHERE t.id = ?
+        ");
+
+        $statement->bind_param('i', $topicId);
+        $statement->execute();
+
+        $result = $this->processResults($statement->get_result());
+
+        return $result[0];
     }
 } 

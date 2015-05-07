@@ -18,16 +18,29 @@ class TopicController extends BaseController {
 
     public function view($topicId, $page) {
 
-        $this->topic = $this->topicsModel->get($topicId)[0];
+        $this->topic = $this->topicsModel->getTopicInfo($topicId);
         $this->answers = $this->topicsModel->getAllAnswersByTopicId($topicId, $page);
 
         $this->renderView(__FUNCTION__);
 
     }
 
-    public function create() {
+    public function create($categoryId) {
+        $this->categoryId = $categoryId;
+        // var_dump($this->$categoryId);die;
+        $this->authorize();
+
         if ($this->isPost) {
-            var_dump("peshooo");die;
+            $topicTitle = $_POST['topicTitle'];
+            $topicContent = $_POST['content'];
+            $userId = $_SESSION['userId'];
+
+            $result = $this->topicsModel->addNewTopic($topicTitle, $topicContent, $categoryId, $userId);
+
+            if ($result) {
+                $lastPageNumber = $this->topicsModel->getTopicLastPageNumberById($categoryId);
+                $this->redirectToUrl('/topic/view/' . $result . '/1');
+            }
         }
 
         $this->renderView(__FUNCTION__);

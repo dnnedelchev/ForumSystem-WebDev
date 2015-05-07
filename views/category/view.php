@@ -5,13 +5,13 @@
 <!--</ul>-->
 <div class="row">
 <?php
+$lastPageNumber = 0;
 foreach($this->topics as $topic) : ?>
     <?php
     $lastAnswerPublishDate = new DateTime($topic['lastAnswerPublishDate']);
     $topicCreatedDate = new DateTime($topic['topic_created_at']);
 
     $lastPageNumber = $this->getTopicLastPageNumberById($topic['topic_id']);
-
     ?>
     <div class="jumbotron" id="jumbo">
 
@@ -89,7 +89,7 @@ $endIndex = ($startIndex + 5 >= $lastPageNumber) ? $lastPageNumber : $startIndex
     </div>
     <div class="col-md-6">
         <div class="pager">
-            <a href="/topic/create" class="btn btn-primary btn-lg pull-right">Add new topic.</a>
+            <a href="/topic/create/<?=$this->categoryId;?>" class="btn btn-primary btn-lg pull-right">Add new topic.</a>
         </div>
     </div>
 

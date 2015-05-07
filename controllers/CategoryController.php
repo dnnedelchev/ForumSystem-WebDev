@@ -15,6 +15,7 @@ class CategoryController  extends BaseController{
 
 
     public function view($categoryId, $page) {
+        $this->categoryId = $categoryId;
         $this->topics = $this->categoriesModel->getAllTopicsByCategoryId($categoryId, $page);
         $this->topicAnswerCount = $this->topicModel->getTopicsAnswerCount();
         $this->currentPage = intval($page);
