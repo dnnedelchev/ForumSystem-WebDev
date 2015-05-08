@@ -121,16 +121,24 @@ class TopicModel extends BaseModel {
 
     public function addNewTopic($topicTitle, $topicContent, $categoryId, $userId) {
 
-        $statement = $this->db->prepare("
-            INSERT INTO topics (title, category_id, created_at, user_id, views_counter, content)
-            VALUES (?, ?, NOW(), ?, 0, ?);
+        $statementTopic = $this->db->prepare("
+            INSERT INTO topics (title, category_id, views_counter)
+            VALUES (?, ?, 0)
         ");
 
-        $statement->bind_param('siis',$topicTitle, intval($categoryId), $userId, $topicContent);
-        $statement->execute();
+        $statementTopic->bind_param('si',$topicTitle, intval($categoryId));
+        $statementTopic->execute();
 
-        if ($statement->insert_id) {
-            return $statement->insert_id;
+        $statementAnswer = $this->db->prepare("
+            INSERT INTO answers (content, topic_id, user_id, publish_date)
+            VALUES(?, ?, ?, NOW())
+        ");
+        $topicId = $statementTopic->insert_id;
+        $statementAnswer->bind_param('sii',$topicContent, $topicId, intval($userId));;
+        $statementAnswer->execute();
+
+        if ($statementAnswer->insert_id) {
+            return $statementTopic->insert_id;
         } else {
             return false;
         }
@@ -162,7 +170,7 @@ class TopicModel extends BaseModel {
         $statement->execute();
 
         $result = $this->processResults($statement->get_result());
-
+        
         return $result[0];
     }
 } 
