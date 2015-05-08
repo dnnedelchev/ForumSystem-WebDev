@@ -24,4 +24,8 @@ class CategoryController  extends BaseController{
         $this->renderView(__FUNCTION__);
     }
 
+    protected function getCategoryLastPageNumberById($categoryId) {
+        return $this->categoriesModel->getCategoryLastPageNumberById($categoryId);
+    }
+
 } 

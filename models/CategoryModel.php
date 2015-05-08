@@ -91,4 +91,21 @@ class CategoryModel extends BaseModel {
 
         return $results;
     }
+
+    public function getCategoryLastPageNumberById($categoryId) {
+        $statement = $this->db->prepare("
+            SELECT count(id) AS results
+            FROM topics
+            WHERE category_id = ?
+        ");
+        $statement->bind_param('i', $categoryId);
+        $statement->execute();
+
+        $result = $this->processResults($statement->get_result())[0]['results'];
+
+        $lastPageNumber = intval($result / BaseModel::DEFAULT_PAGE_SIZE) + 1;
+
+        return $lastPageNumber;
+
+    }
 } 

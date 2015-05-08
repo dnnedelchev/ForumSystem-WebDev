@@ -57,10 +57,12 @@ foreach($this->topics as $topic) : ?>
     <?php
     $isStartDisabledClass = '';
     $isEndDisabledClass = '';
+    $categoryLastPage = $this->getCategoryLastPageNumberById($this->categoryId);
+
     if ($this->currentPage === 1) {
         $isStartDisabledClass = 'class="disabled"';
     }
-    if ($this->currentPage === $lastPageNumber) {
+    if ($this->currentPage === $categoryLastPage) {
         $isEndDisabledClass = 'class="disabled"';
     }
     ?>
@@ -68,11 +70,11 @@ foreach($this->topics as $topic) : ?>
 <?php
 if ($this->currentPage <= 5) {
     $startIndex = 1;
-} elseif($this->currentPage + 5 >= $lastPageNumber) {
-    $startIndex = $lastPageNumber - 5;
+} elseif($this->currentPage + 5 >= $categoryLastPage) {
+    $startIndex = $categoryLastPage - 5;
 }
 
-$endIndex = ($startIndex + 5 >= $lastPageNumber) ? $lastPageNumber : $startIndex + 5;
+$endIndex = ($startIndex + 5 >= $categoryLastPage) ? $categoryLastPage : $startIndex + 5;
 ?>
 <?php for ($i = $startIndex; $i <= $endIndex; $i += 1 ) :?>
     <?php
@@ -84,7 +86,7 @@ $endIndex = ($startIndex + 5 >= $lastPageNumber) ? $lastPageNumber : $startIndex
     <li <?= $isActiveClass; ?>><a href="/category/view/<?=$this->categoryId;?>/<?= $i;?>"><?= $i?></a></li>
 
 <?php endfor ?>
-    <li><a href="/category/view/<?=$this->categoryId;?>/<?= $lastPageNumber;?>" <?= $isEndDisabledClass?>>»</a></li>
+    <li><a href="/category/view/<?=$this->categoryId;?>/<?= $categoryLastPage;?>" <?= $isEndDisabledClass?>>»</a></li>
 </ul>
     </div>
     <div class="col-md-6">

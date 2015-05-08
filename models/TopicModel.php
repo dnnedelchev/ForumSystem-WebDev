@@ -170,7 +170,7 @@ class TopicModel extends BaseModel {
         $statement->execute();
 
         $result = $this->processResults($statement->get_result());
-        
+
         return $result[0];
     }
 } 

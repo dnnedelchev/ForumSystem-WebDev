@@ -20,6 +20,7 @@ class TopicController extends BaseController {
 
         $this->topic = $this->topicsModel->getTopicInfo($topicId);
         $this->answers = $this->topicsModel->getAllAnswersByTopicId($topicId, $page);
+        $this->currentPage = intval($page);
 
         $this->renderView(__FUNCTION__);
 
