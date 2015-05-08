@@ -1,16 +1,16 @@
 <div class="row">
-    <h1><a href="/view/topic/1/1"><?= $this->topic['title'] ?></a></h1>
+    <h1><a href="/view/topic/1/1"><?= htmlspecialchars($this->topic['title']); ?></a></h1>
 
     <div class="col-md-9">
         <div class="jumbotron" id="jumbo">
             <h6>Added at: <?= $this->topic['created_at']; ?></h6>
-            <p><?= $this->topic['content'] ?></p>
+            <p><?= htmlspecialchars($this->topic['content']); ?></p>
         </div>
     </div>
 
     <div class="col-md-3">
         <?php $registrationDate = new DateTime($this->topic['registration_date']);?>
-        <p><a href="/user/view/<?= $this->topic['username']; ?>"><?= $this->topic['username']?></a></p>
+        <p><a href="/user/view/<?= htmlspecialchars($this->topic['username']); ?>"><?= htmlspecialchars($this->topic['username'])?></a></p>
         <p><img src="/content/pesho.png"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($this->topic['user_id']);?></p>
         <p>Register: <?= $registrationDate->format('Y/m/d H:i') ?></p>
@@ -28,12 +28,12 @@
     <div class="col-md-9">
         <div class="jumbotron" id="jumbo">
             <h6>Added at: <?= $answer['publish_date']; ?></h6>
-            <p><?= $answer['content'] ?></p>
+            <p><?= htmlspecialchars($answer['content']); ?></p>
         </div>
     </div>
 
     <div class="col-md-3">
-        <p><a href="/user/view/<?= $answer['answer_username']; ?>"><?= $answer['answer_username']?></a></p>
+        <p><a href="/user/view/<?= htmlspecialchars($answer['answer_username']); ?>"><?= htmlspecialchars($answer['answer_username']);?></a></p>
         <p><img src="/content/pesho.png"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($answer['answer_user_id']);?></p>
         <p>Register: <?= $registrationDate->format('Y/m/d H:i') ?></p>
@@ -86,7 +86,7 @@
     </div>
     <div class="col-md-6">
         <div class="pager">
-            <a href="/topic/create/<?=$this->topic['topic_id']?>" class="btn btn-primary btn-lg pull-right">Add new answer to topic.</a>
+            <a href="/answer/create/<?=$this->topic['topic_id']?>" class="btn btn-primary btn-lg pull-right">Add new answer to topic.</a>
         </div>
     </div>
 

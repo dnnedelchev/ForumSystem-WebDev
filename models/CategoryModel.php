@@ -103,7 +103,7 @@ class CategoryModel extends BaseModel {
 
         $result = $this->processResults($statement->get_result())[0]['results'];
 
-        $lastPageNumber = intval($result / BaseModel::DEFAULT_PAGE_SIZE) + 1;
+        $lastPageNumber = ceil($result / BaseModel::DEFAULT_PAGE_SIZE);// + 1;
 
         return $lastPageNumber;
 

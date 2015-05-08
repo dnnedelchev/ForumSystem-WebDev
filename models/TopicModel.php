@@ -173,4 +173,15 @@ class TopicModel extends BaseModel {
 
         return $result[0];
     }
+
+    public function incrementViewCounter($topicId) {
+        $statement = $this->db->prepare("
+            UPDATE topics
+            SET
+            views_counter = views_counter + 1
+            WHERE id = ?;
+        ");
+        $statement->bind_param('i', $topicId);
+        $statement->execute();
+    }
 } 

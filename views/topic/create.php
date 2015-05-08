@@ -12,4 +12,5 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg col-md-offset-1">Submit</button>
+    </form>
 </div>

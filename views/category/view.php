@@ -17,7 +17,7 @@ foreach($this->topics as $topic) : ?>
 
         <div class="row">
             <div class="col-md-12">
-                <h3><a class="text-warning" href="/topic/view/<?= $topic['topic_id']; ?>/1"><?= $topic['title']; ?></a></h3>
+                <h3><a class="text-warning" href="/topic/view/<?= $topic['topic_id']; ?>/1"><?= htmlspecialchars($topic['title']); ?></a></h3>
             </div>
         </div>
 
@@ -26,7 +26,7 @@ foreach($this->topics as $topic) : ?>
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-8">
-                        <h4 class="text-info">Created by: <a class="text-info" href="/user/view/<?= $topic['topic_user_id'];?>"><?=$topic['topic_username'];?></a> at <?= $topicCreatedDate->format('Y/m/d H:i'); ?></h4>
+                        <h4 class="text-info">Created by: <a class="text-info" href="/user/view/<?= $topic['topic_user_id'];?>"><?=htmlspecialchars($topic['topic_username']);?></a> at <?= $topicCreatedDate->format('Y/m/d H:i'); ?></h4>
                     </div>
                 </div>
                 <div class="row">
@@ -34,7 +34,7 @@ foreach($this->topics as $topic) : ?>
                         <?php if ($topic['answer_id'] === null): ?>
                             <h4 class="text-info"><a class="text-info" href="/topic/view/<?= $topic['topic_id']; ?>/1">Last answer</a>: No answers in this topic yet.</h4>
                         <?php else: ?>
-                            <h4 class="text-info"><a class="text-info" href="/topic/view/<?php echo $topic['topic_id'] . "/" .  $lastPageNumber; ?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= $topic['answer_username']; ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
+                            <h4 class="text-info"><a class="text-info" href="/topic/view/<?php echo $topic['topic_id'] . "/" .  $lastPageNumber; ?>#<?=$topic['answer_id'];?>">Last answer</a>: <a class="text-info" href="/user/view/<?= $topic['answer_user_id']; ?>"><?= htmlspecialchars($topic['answer_username']); ?></a> at <?= $lastAnswerPublishDate->format('Y/m/d H:i'); ?></h4>
                         <?php endif; ?>
                     </div>
                 </div>

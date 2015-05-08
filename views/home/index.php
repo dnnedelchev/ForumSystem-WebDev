@@ -3,10 +3,10 @@
         <?php foreach($this->categories as $category) :?>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"><a href="category/view/<?= $category['id']?>/1"><?= $category['name']?></a></h3>
+                <h3 class="panel-title"><a href="category/view/<?= $category['id']?>/1"><?= htmlspecialchars($category['name']); ?></a></h3>
             </div>
             <div class="panel-body">
-                <?= $category['description']?>
+                <?= htmlspecialchars($category['description']);?>
             </div>
         </div>
         <?php endforeach;?>
@@ -28,7 +28,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <h3><a class="text-warning" href="/topic/view/<?= $topic['topic_id']; ?>/1"><?= $topic['title']; ?></a></h3>
+                    <h3><a class="text-warning" href="/topic/view/<?= $topic['topic_id']; ?>/1"><?= htmlspecialchars($topic['title']); ?></a></h3>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
             <div class="col-md-8">
             <div class="row">
                 <div class="col-md-8">
-                    <h4 class="text-info">Created by: <a class="text-info" href="/user/view/<?= $topic['topic_user_id'];?>"><?=$topic['topic_username'];?></a> at <?= $topicCreatedDate->format('Y/m/d H:i'); ?></h4>
+                    <h4 class="text-info">Created by: <a class="text-info" href="/user/view/<?= $topic['topic_user_id'];?>"><?=htmlspecialchars($topic['topic_username']);?></a> at <?= $topicCreatedDate->format('Y/m/d H:i'); ?></h4>
                 </div>
             </div>
             <div class="row">

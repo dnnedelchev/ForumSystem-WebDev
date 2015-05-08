@@ -17,9 +17,11 @@ class TopicController extends BaseController {
 
 
     public function view($topicId, $page) {
+        $this->topicsModel->incrementViewCounter($topicId);
 
         $this->topic = $this->topicsModel->getTopicInfo($topicId);
         $this->answers = $this->topicsModel->getAllAnswersByTopicId($topicId, $page);
+
         $this->currentPage = intval($page);
 
         $this->renderView(__FUNCTION__);

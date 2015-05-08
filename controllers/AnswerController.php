@@ -10,14 +10,18 @@ class AnswerController extends BaseController{
 
 
     public function create($topicId) {
+        $this->authorize();
         $this->topicId = $topicId;
+        $this->answerInfo = $this->answersModel->getAnswerInfo($topicId);
+
         if ($this->isPost) {
-            $content =  htmlspecialchars($_POST['content']);
+            $content =  $_POST['content'];
 
-            $isAdded = $this->answersModel->create($content, $topicId, $_SESSION['userId']);
+            $answerId = $this->answersModel->create($content, $topicId, $_SESSION['userId']);
 
-            if ($isAdded) {
-                $this->redirect('topic', 'view', array($topicId));
+            if ($answerId) {
+                $redirectUrl = '/topic/view/' . $topicId . '/' . $this->answersModel->getTopicLastPageNumberById($topicId) . '#' . $answerId;
+                $this->redirectToUrl($redirectUrl);
             }
 
         }
