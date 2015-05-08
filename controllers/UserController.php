@@ -58,6 +58,8 @@ class UserController extends BaseController {
         unset($_SESSION['userId']);
         $this->isLoggedIn = false;
 
+        $this->addInfoMessage("See u soon!");
+
         $this->redirectToUrl('/');
 
         // TODO redirect and msg.
@@ -89,12 +91,33 @@ class UserController extends BaseController {
         $this->authorize();
 
         if ($this->isPost) {
+            $avatarData = false;
+
+            if (isset($_FILES['avatar'])) {
+                //var_dump($_FILES['avatar']['error'][0] === 0);die;
+                if ($_FILES['avatar']['error'] !== 0) {
+                    die("Upload failed with error cod ");
+                }
+
+                $info = getimagesize($_FILES['avatar']['tmp_name']);
+                if ($info === FALSE) {
+                    die("Unable to determine image type of uploaded file");
+                }
+
+                if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) && ($info[2] !== IMAGETYPE_PNG)) {
+                    die("Not a gif/jpeg/png");
+                }
+                $avatarData = file_get_contents($_FILES['avatar']['tmp_name']);
+
+               //var_dump($avatarData);die;
+            }
 
             $editedProfile = array('username' => $_POST['username'],
                                    'name' => $_POST['personal_name'],
                                    'email' => $_POST['email'],
                                    'skype' => $_POST['skype'],
-                                   'birthdate' => new DateTime($_POST['birthdate']));
+                                   'birthdate' => new DateTime($_POST['birthdate']),
+                                   'avatar' => $avatarData);
 
             $result = $this->db->editUserProfile($_SESSION['userId'], $editedProfile);
 

@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="well bs-component">
-            <form class="form-horizontal" method="post" action="/user/edit">
+            <form class="form-horizontal" method="post" action="/user/edit" enctype="multipart/form-data">
                 <fieldset>
                     <div class="row"><legend>Edit Profile</legend></div>
                     <div class="row">
@@ -35,6 +35,12 @@
                                 <label for="birthdate" class="col-lg-2 control-label">Birthdate</label>
                                 <div class="col-lg-10">
                                     <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="birthdate" value="<?= $this->currentUser['birthdate']; ?>">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="avatar" class="col-lg-2 control-label">Avatar</label>
+                                <div class="col-lg-10">
+                                    <input type="file" class="form-control" id="avatar" name="avatar">
                                 </div>
                             </div>
                         </div>

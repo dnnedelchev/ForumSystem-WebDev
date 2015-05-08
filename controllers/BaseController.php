@@ -82,4 +82,24 @@ class BaseController {
         return $topicModel->getTopicLastPageNumberById($topicId);
     }
 
+    private function addMessage($msgSessionkey, $msgText) {
+        if (!isset($_SESSION[$msgSessionkey])) {
+            $_SESSION[$msgSessionkey] = [];
+        }
+        array_push($_SESSION[$msgSessionkey], $msgText);
+
+    }
+
+    protected function addErrorMessage($errorMsg) {
+        $this->addMessage(ERROR_MESSAGES_SESSION_KEY, $errorMsg);
+    }
+
+    protected function addInfoMessage($infoMsg) {
+        $this->addMessage(INFO_MESSAGES_SESSION_KEY, $infoMsg);
+    }
+
+    protected function addSuccessMessage($succsessMsg) {
+        $this->addMessage(SUCCESS_MESSAGES_SESSION_KEY, $succsessMsg);
+    }
+
 }

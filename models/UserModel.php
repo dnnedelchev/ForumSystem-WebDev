@@ -44,10 +44,8 @@ class UserModel extends BaseModel {
     public function getUserInformationByUserId($userId) {
         $statement = $this->db->prepare("
             SELECT u.username, u.registration_date, u.personal_name,
-	               u.email, u.birthdate, count(t.id) AS topics_created,
-	               count(a.id) AS answers_created, u.skype
-            FROM users AS u LEFT JOIN topics AS t
-                ON u.id = t.user_id LEFT JOIN answers a
+	               u.email, u.birthdate, count(a.id) AS answers_created, u.skype, u.avatar
+            FROM users AS u JOIN answers a
                 ON u.id = a.user_id
             WHERE u.id = ?
         ");
@@ -67,7 +65,7 @@ class UserModel extends BaseModel {
         $statement = $this->db->prepare("
             SELECT u.username, u.registration_date, u.personal_name,
 	               u.email, u.birthdate, count(t.id) AS topics_created,
-	               count(a.id) AS answers_created, u.skype
+	               count(a.id) AS answers_created, u.skype, u.avatar
             FROM users AS u LEFT JOIN topics AS t
                 ON u.id = t.user_id LEFT JOIN answers a
                 ON u.id = a.user_id
@@ -87,22 +85,22 @@ class UserModel extends BaseModel {
 
     public function editUserProfile($userId, $user) {
         $statement = $this->db->prepare("
-            UPDATE `users`
+            UPDATE users
             SET
-            `username` = ?,
-            `personal_name` = ?,
-            `email` = ?,
-            `birthdate` = STR_TO_DATE(?,'%Y-%m-%d'),
-            `skype` = ?
-            WHERE `id` = ?
+            username = ?,
+            personal_name = ?,
+            email = ?,
+            birthdate = STR_TO_DATE(?,'%Y-%m-%d'),
+            skype = ?,
+            avatar = ?
+            WHERE id = ?
         ");
 
         extract($user);
         $birthdate = $birthdate->format('Y-m-d');
-
-        $statement->bind_param('sssssi', $username, $name, $email, $birthdate, $skype, $userId);
+//var_dump($statement);die;
+        $statement->bind_param('ssssssi', $username, $name, $email, $birthdate, $skype, $avatar, $userId);
         $statement->execute();
-
 
         if ($statement->affected_rows >= 2 || !empty($statement->error_list)) {
             die('лоооошооооо баце');

@@ -2,7 +2,7 @@
 session_start();
 // TODO set time of session.
 
-include_once('config/db.php');
+include_once('config/confing.php');
 
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $components = explode('/', $request);
@@ -10,6 +10,10 @@ $controllerName = 'home';
 if (count($components) >= 2 && $components[1] != '') {
     $controllerName = ucfirst($components[1]);
     if (! preg_match('/^[a-zA-Z0-9_]+$/', $controllerName)) {
+        include_once('/views/layouts/header.php');
+        include_once('/views/layouts/pageNotFound.php');
+        include_once('/views/layouts/footer.php');
+        die;
         die ('Invalid controller name');
     }
 }
@@ -18,7 +22,10 @@ $action = 'index';
 if (count($components) >= 3 && $components[2] != '') {
     $action = $components[2];
     if (! preg_match('/^[a-zA-Z0-9_]+$/', $action)) {
-        die ('Invalid action name');
+        include_once('/views/layouts/header.php');
+        include_once('/views/layouts/pageNotFound.php');
+        include_once('/views/layouts/footer.php');
+        die;
     }
 }
 
@@ -34,11 +41,18 @@ if (class_exists($controllerClassName)) {
         call_user_func_array(array($controller, $action), $params);
         $controller->renderView();
     } else {
-        die ('Error: cannot find action.');
+        include_once('views/layouts/header.php');
+        include_once('/views/layouts/header.php');
+        include_once('/views/layouts/pageNotFound.php');
+        include_once('/views/layouts/footer.php');
+        die;
     }
 } else {
     $controllerFileName = 'controllers/' . $controllerClassName . 'register.php';
-    die ('Error: cannot find controller: ' . $controllerFileName);
+    include_once('/views/layouts/header.php');
+    include_once('/views/layouts/pageNotFound.php');
+    include_once('/views/layouts/footer.php');
+    die;
 }
 
 function __autoload($class_name) {

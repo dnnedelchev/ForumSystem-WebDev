@@ -18,16 +18,18 @@
                 <li><a href="/topic">Topics</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-            <?php if($this->isLoggedIn) : ?>
-                <li><a href="/user/view/<?= $_SESSION['username']; ?>"><?= 'Welcome ' , $_SESSION['username']; ?></a></li>
-                <li><a href="/user/logout">Logout</a></li>
-            <?php else : ?>
-                <li><a href="/user/login">Login</a></li>
-                <li><a href="/user/register">Register</a></li>
+            <?php if (isset($this)) :?>
+                <?php if($this->isLoggedIn) : ?>
+                    <li><a href="/user/view/<?= $_SESSION['username']; ?>"><?= 'Welcome ' , $_SESSION['username']; ?></a></li>
+                    <li><a href="/user/logout">Logout</a></li>
+                <?php else : ?>
+                    <li><a href="/user/login">Login</a></li>
+                    <li><a href="/user/register">Register</a></li>
+                <?php endif; ?>
             <?php endif; ?>
             </ul>
         </div>
     </div>
 </nav>
-
+<?php include_once('/views/layouts/messages.php'); ?>
 <div class="container">
