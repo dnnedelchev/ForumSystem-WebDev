@@ -9,7 +9,7 @@
     </div>
 
     <div class="col-md-3">
-        <?php $registrationDate = new DateTime($this->topic['registration_date']); var_dump($registrationDate);die; ?>
+        <?php $registrationDate = new DateTime($this->topic['registration_date']);?>
         <p><a href="/user/view/<?= $this->topic['username']; ?>"><?= $this->topic['username']?></a></p>
         <p><img src="/content/pesho.png"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($this->topic['user_id']);?></p>
