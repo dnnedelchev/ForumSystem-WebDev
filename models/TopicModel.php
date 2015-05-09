@@ -8,7 +8,8 @@ class TopicModel extends BaseModel {
     public function getAllAnswersByTopicId($topicId, $page) {
         $statement = $this->db->prepare("
                 SELECT a.id AS answer_id, t.title, a.content , a.topic_id, a.user_id AS answer_user_id,
-                       au.username AS answer_username, au.registration_date, a.publish_date
+                       au.username AS answer_username, au.registration_date, a.publish_date, au.avatar,
+                       au.mime_type
                 FROM topics AS t JOIN answers AS a
                     ON t.id = a.topic_id RIGHT JOIN users AS au
                     ON a.user_id = au.id
@@ -147,10 +148,11 @@ class TopicModel extends BaseModel {
     public function getTopicInfo($topicId) {
         $statement = $this->db->prepare("
         SELECT t.id AS topic_id, t.title, t.category_id, question.topic_created_at AS created_at, question.user_id, question.content,
-               question.username, question.registration_date
+               question.username, question.registration_date, question.avatar, question.mime_type
         FROM topics AS t JOIN (
                                 SELECT answ.topic_id AS question_id, answ.publish_date AS topic_created_at, answ.user_id AS user_id,
-                                    answu.username AS username, answ.content AS content, answu.registration_date AS registration_date
+                                    answu.username AS username, answ.content AS content, answu.registration_date AS registration_date,
+                                    answu.avatar, answu.mime_type
                                 FROM answers AS answ JOIN users AS answu
                                     ON answ.user_id = answu.id
                                 WHERE answ.publish_date=(
@@ -203,35 +205,29 @@ class TopicModel extends BaseModel {
 
     public function edit($topicTitle, $topicContent, $topicId) {
         $statement = $this->db->prepare("
-            UPDATE topics
-            SET
-            title = ?
-            WHERE id = ?
+            SELECT id
+            FROM answers
+            WHERE publish_date = (
+                SELECT a.publish_date
+                FROM answers AS a
+                WHERE a.topic_id = ?
+                ORDER BY a.publish_date asc
+                LIMIT 1);
         ");
-
-        $statement->bind_param('si', $topicTitle, $topicId);
+        $topicId = intval($topicId);
+        $statement->bind_param('i', $topicId);
         $statement->execute();
+        $questionId = $this->processResults($statement->get_result())[0]['id'];
 
         $statement = $this->db->prepare("
-            UPDATE answers
-            SET
-            content = ?
-            WHERE id = (SELECT id
-                        FROM answers AS a
-                        WHERE a.publish_date = (
-                            SELECT publish_date
-                            FROM answers
-                            WHERE topic_id = a.topic_id
-                            ORDER BY publish_date asc
-                            LIMIT 1
-                        )
-            )
+            UPDATE answers, topics
+            SET topics.title=?, answers.content=?
+            WHERE topics.id=? AND answers.id = ?
         ");
-
-        $statement->bind_param('s', $topicContent);
+        $statement->bind_param('ssii', $topicTitle, $topicContent, $topicId, $questionId);
         $statement->execute();
 
-        if ($statement->affected_rows === 1) {
+        if (!$statement->error) {
             return true;
         } else {
             return false;

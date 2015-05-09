@@ -75,8 +75,8 @@ class TopicController extends BaseController {
             $result = $this->topicsModel->edit($topicTitle, $topicContent, $topicId);
 
             if ($result) {
-                $lastPageNumber = $this->topicsModel->getTopicLastPageNumberById($categoryId);
-                $this->redirectToUrl('/topic/view/' . $result . '/1');
+                $this->redirectToUrl('/topic/view/' . $topicId . '/1');
+                die;
             }
         }
 
