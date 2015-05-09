@@ -10,7 +10,7 @@ class CategoryController  extends BaseController{
     }
 
     public function index() {
-        $this->categories = $this->categoriesModel->find(array('columns' => 'name'));
+        $this->categories = $this->categoriesModel->getAllCategories();
     }
 
 

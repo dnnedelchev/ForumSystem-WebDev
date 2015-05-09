@@ -6,7 +6,10 @@ class UserModel extends BaseModel {
     }
 
     public function register($username, $password) {
-        $statement = $this->db->prepare("SELECT id, isAdmin FROM users WHERE username = ?");
+        $statement = $this->db->prepare("
+                SELECT id, isAdmin
+                FROM users
+                WHERE username = ?");
         $statement->bind_param('s', $username);
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
@@ -29,13 +32,16 @@ class UserModel extends BaseModel {
     }
 
     public function login($username, $password) {
-        $statement = $this->db->prepare("SELECT id, username, pass_hash FROM users WHERE username = ?");
+        $statement = $this->db->prepare("
+                    SELECT id, username, pass_hash, is_admin
+                    FROM users
+                    WHERE username = ?");
         $statement->bind_param('s', $username);
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
 
         if (password_verify($password, $result['pass_hash'])) {
-            return array('userid' => $result['id'], 'isAdmin' => $result['isAdmin']);
+            return array('userid' => $result['id'], 'isAdmin' => $result['is_admin']);
         }
 
         return false;
@@ -44,7 +50,7 @@ class UserModel extends BaseModel {
     public function getUserInformationByUserId($userId) {
         $statement = $this->db->prepare("
             SELECT u.username, u.registration_date, u.personal_name,
-	               u.email, u.birthdate, count(a.id) AS answers_created, u.skype, u.avatar
+	               u.email, u.birthdate, count(a.id) AS answers_created, u.skype, u.avatar, u.mime_type
             FROM users AS u JOIN answers a
                 ON u.id = a.user_id
             WHERE u.id = ?
@@ -92,14 +98,15 @@ class UserModel extends BaseModel {
             email = ?,
             birthdate = STR_TO_DATE(?,'%Y-%m-%d'),
             skype = ?,
-            avatar = ?
+            avatar = ?,
+            mime_type = ?
             WHERE id = ?
         ");
 
         extract($user);
         $birthdate = $birthdate->format('Y-m-d');
-//var_dump($statement);die;
-        $statement->bind_param('ssssssi', $username, $name, $email, $birthdate, $skype, $avatar, $userId);
+
+        $statement->bind_param('sssssssi', $username, $name, $email, $birthdate, $skype, $avatar, $mimeType, $userId);
         $statement->execute();
 
         if ($statement->affected_rows >= 2 || !empty($statement->error_list)) {

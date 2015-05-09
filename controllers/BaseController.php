@@ -17,6 +17,8 @@ class BaseController {
 
         if (isset($_SESSION['username'])) {
             $this->isLoggedIn = true;
+            $this->isAdmin =
+                isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] : 0;
         }
 
         $this->controller = $controller;

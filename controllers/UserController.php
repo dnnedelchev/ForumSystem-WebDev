@@ -24,7 +24,7 @@ class UserController extends BaseController {
                 $_SESSION['username'] = $username;
                 $_SESSION['userId'] = $userData['userId'];
                 $this->isAdmin = $userData['isAdmin'];
-
+                $_SESSION['isAdmin'] = $userData['isAdmin'];
                 $this->redirect('home');
             }
         }
@@ -43,6 +43,7 @@ class UserController extends BaseController {
                 $_SESSION['username'] = $username;
                 $_SESSION['userId'] = $userData['userid'];
                 $this->isAdmin = $userData['isAdmin'];
+                $_SESSION['isAdmin'] = $userData['isAdmin'];
                 $this->redirectToUrl('/');
                 // TODO $this->redirect()
             } else {
@@ -56,6 +57,7 @@ class UserController extends BaseController {
     public function logout() {
         unset($_SESSION['username']);
         unset($_SESSION['userId']);
+        unset($_SESSION['isAdmin']);
         $this->isLoggedIn = false;
 
         $this->addInfoMessage("See u soon!");
@@ -103,13 +105,17 @@ class UserController extends BaseController {
                 if ($info === FALSE) {
                     die("Unable to determine image type of uploaded file");
                 }
+                $size = ceil($_FILES['avatar']['size'] / 1024);
+                if ($size > 100) {
+                    die ("invalid size");
+                }
 
                 if (($info[2] !== IMAGETYPE_GIF) && ($info[2] !== IMAGETYPE_JPEG) && ($info[2] !== IMAGETYPE_PNG)) {
                     die("Not a gif/jpeg/png");
                 }
                 $avatarData = file_get_contents($_FILES['avatar']['tmp_name']);
+                $mimeType = $info[3]['mime'];
 
-               //var_dump($avatarData);die;
             }
 
             $editedProfile = array('username' => $_POST['username'],
@@ -117,7 +123,8 @@ class UserController extends BaseController {
                                    'email' => $_POST['email'],
                                    'skype' => $_POST['skype'],
                                    'birthdate' => new DateTime($_POST['birthdate']),
-                                   'avatar' => $avatarData);
+                                   'avatar' => $avatarData,
+                                   'mime' => $mimeType);
 
             $result = $this->db->editUserProfile($_SESSION['userId'], $editedProfile);
 

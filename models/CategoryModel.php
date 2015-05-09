@@ -108,4 +108,19 @@ class CategoryModel extends BaseModel {
         return $lastPageNumber;
 
     }
+
+    public function getAllCategories() {
+        $statement = $this->db->prepare("
+            SELECT c.id AS category_id, c.name AS category_name, c.description, count(t.id) AS topics_count
+            FROM categories AS c JOIN topics AS t
+                on c.id = t.category_id
+            GROUP BY c.id
+        ");
+
+        $statement->execute();
+
+        $result = $this->processResults($statement->get_result());
+
+        return $result;
+    }
 } 

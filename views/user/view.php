@@ -12,7 +12,7 @@ function data_uri($file, $mime)
         <div class="col-md-3">
             <p><?= $this->currentUser['username']?></p>
             <p><?php if ($this->currentUser['personal_name']) echo $this->currentUser['personal_name'];?></p>
-            <p><img src="<?php echo data_uri($this->currentUser['avatar'],'image/png'); ?>" alt="An elephant" /><!--img src="/content/pesho.png"/-->
+            <p><img src="<?php echo data_uri($this->currentUser['avatar'], $this->currentUser['mime_type']); ?>" class="img-avatar" /><!--img src="/content/pesho.png"/-->
             </p>
         </div>
 

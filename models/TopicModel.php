@@ -184,4 +184,58 @@ class TopicModel extends BaseModel {
         $statement->bind_param('i', $topicId);
         $statement->execute();
     }
+
+    public function delete($topicId) {
+        $statement = $this->db->prepare("
+            DELETE FROM topics
+            WHERE id = ?
+        ");
+
+        $statement->bind_param('i', $topicId);
+        $statement->execute();
+
+        if ($statement->affected_rows === 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function edit($topicTitle, $topicContent, $topicId) {
+        $statement = $this->db->prepare("
+            UPDATE topics
+            SET
+            title = ?
+            WHERE id = ?
+        ");
+
+        $statement->bind_param('si', $topicTitle, $topicId);
+        $statement->execute();
+
+        $statement = $this->db->prepare("
+            UPDATE answers
+            SET
+            content = ?
+            WHERE id = (SELECT id
+                        FROM answers AS a
+                        WHERE a.publish_date = (
+                            SELECT publish_date
+                            FROM answers
+                            WHERE topic_id = a.topic_id
+                            ORDER BY publish_date asc
+                            LIMIT 1
+                        )
+            )
+        ");
+
+        $statement->bind_param('s', $topicContent);
+        $statement->execute();
+
+        if ($statement->affected_rows === 1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 } 

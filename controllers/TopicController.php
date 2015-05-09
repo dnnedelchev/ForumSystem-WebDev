@@ -49,6 +49,39 @@ class TopicController extends BaseController {
         $this->renderView(__FUNCTION__);
     }
 
+    public function delete($topicId) {
+        $this->authorize();
+
+        if ($this->topicsModel->delete($topicId)) {
+            $this->addSuccessMessage("Topic was deleted");
+            $this->redirect('category', 'view', array($_GET['categoryId'], 1));
+            die;
+        } else {
+            $this->addErrorMessage("Topic cannot be deleted");
+            $this->redirect('topic', 'view', array($topicId, 1));
+            die;
+        }
+
+    }
+
+    public function edit($topicId) {
+        $this->authorize();
+        $this->topic = $this->topicsModel->getTopicInfo($topicId);
+
+        if ($this->isPost) {
+            $topicTitle = $_POST['topicTitle'];
+            $topicContent = $_POST['content'];
+
+            $result = $this->topicsModel->edit($topicTitle, $topicContent, $topicId);
+
+            if ($result) {
+                $lastPageNumber = $this->topicsModel->getTopicLastPageNumberById($categoryId);
+                $this->redirectToUrl('/topic/view/' . $result . '/1');
+            }
+        }
+
+        $this->renderView(__FUNCTION__);
+    }
 
     protected function getCountOfUserAnswers($userId) {
         return $this->usersModel->getCountOfUserAnswersByUserId($userId);

@@ -86,6 +86,10 @@
     </div>
     <div class="col-md-6">
         <div class="pager">
+            <?php if ($this->isAdmin) : ?>
+                <a href="/topic/delete/<?=$this->topic['topic_id']?>?categoryId=<?=$this->topic['category_id'];?>" class="btn btn-primary btn-lg">Delete topic</a>
+                <a href="/topic/edit/<?=$this->topic['topic_id']?>" class="btn btn-primary btn-lg">Edit topic</a>
+            <?php endif?>
             <a href="/answer/create/<?=$this->topic['topic_id']?>" class="btn btn-primary btn-lg pull-right">Add new answer to topic.</a>
         </div>
     </div>

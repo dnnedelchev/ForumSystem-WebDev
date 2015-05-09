@@ -15,7 +15,6 @@
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/category">Categories</a></li>
-                <li><a href="/topic">Topics</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
             <?php if (isset($this)) :?>
