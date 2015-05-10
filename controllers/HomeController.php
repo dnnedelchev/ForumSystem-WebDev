@@ -7,6 +7,7 @@ class HomeController extends BaseController{
 
 
     public function onInit() {
+        $this->title = 'Forum';
         $this->dbCategories = new CategoryModel(array('table' => 'categories'));
         $this->dbTopics = new TopicModel(array('table' => 'topics'));
 

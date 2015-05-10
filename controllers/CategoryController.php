@@ -5,6 +5,7 @@ class CategoryController  extends BaseController{
     private $categoriesModel;
 
     protected function onInit() {
+        $this->title = 'Categories';
         $this->categoriesModel = new CategoryModel(array('table' => 'categories'));
         $this->topicModel = new TopicModel(array('table' => 'topics'));
     }

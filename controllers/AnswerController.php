@@ -5,6 +5,7 @@ class AnswerController extends BaseController{
     protected $answersModel;
 
     public function onInit() {
+        $this->title = 'Answers';
         $this->answersModel = new AnswerModel(array('table' => 'answers'));
     }
 

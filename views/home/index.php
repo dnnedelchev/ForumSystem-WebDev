@@ -3,7 +3,7 @@
         <?php foreach($this->categories as $category) :?>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"><a href="category/view/<?= $category['id']?>/1"><?= htmlspecialchars($category['name']); ?></a></h3>
+                <h3 class="panel-title"><a href="/category/view/<?= $category['id']?>/1"><?= htmlspecialchars($category['name']); ?></a></h3>
             </div>
             <div class="panel-body">
                 <?= htmlspecialchars($category['description']);?>
@@ -19,7 +19,6 @@
         <?php
 
             $lastAnswerPublishDate = new DateTime($topic['publish_date']);
-            //var_dump($topic['answer_id']);die;
             $topicCreatedDate = new DateTime($topic['topic_created_at']);
 
             $lastPageNumber = $this->getTopicLastPageNumberById($topic['topic_id']);

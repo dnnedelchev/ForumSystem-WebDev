@@ -4,7 +4,7 @@
 
 <head>
     <link rel="stylesheet" href="/content/styles/bootstrap.css" />
-    <title>TITLE</title>
+    <title><?php echo htmlspecialchars($this->title) ?></title>
 </head>
 
 <body>

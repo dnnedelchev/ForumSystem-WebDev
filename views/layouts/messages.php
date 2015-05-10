@@ -5,7 +5,6 @@ renderMessages(SUCCESS_MESSAGES_SESSION_KEY, 'alert-success');
 
 function renderMessages($messagesKey, $alert) {
     if (isset($_SESSION[$messagesKey]) && count($_SESSION[$messagesKey]) > 0) {
-        // echo '<ul class="' . $cssClass . '">';
         foreach ($_SESSION[$messagesKey] as $msg) {
             echo '<div class="row">';
                 echo '<div class="col-md-4 col-md-offset-4">';
@@ -15,7 +14,6 @@ function renderMessages($messagesKey, $alert) {
                 echo '</div>';
             echo '</div>';
         }
-        // echo '</ul>';
     }
     $_SESSION[$messagesKey] = [];
 }

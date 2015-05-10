@@ -7,6 +7,7 @@ class TopicController extends BaseController {
     private $usersModel;
 
     protected function onInit() {
+        $this->title = 'Topics';
         $this->topicsModel = new TopicModel(array('table' => 'topics'));
         $this->usersModel = new UserModel(array('table' => 'users'));
     }

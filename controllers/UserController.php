@@ -6,6 +6,7 @@ class UserController extends BaseController {
     protected $isCurrentUser;
 
     public function onInit() {
+        $this->title = 'Users';
         $this->db = new UserModel(array('table' => 'users'));
     }
 
