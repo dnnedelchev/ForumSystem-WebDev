@@ -75,6 +75,7 @@ class BaseController {
 
     public function authorize() {
         if (!$this->isLoggedIn) {
+            $this->addErrorMessage('Please login.');
             $this->redirect('user', 'login');
         }
     }

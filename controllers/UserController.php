@@ -35,6 +35,16 @@ class UserController extends BaseController {
             $password = $_POST['password'];
             $repeatPassword = $_POST['repeatPassword'];
 
+            if (isset($_POST['email'])) {
+                $isValid = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+
+                if (!$isValid) {
+                    $this->addErrorMessage("Email is invalid.");
+                    $this->renderView(__FUNCTION__);
+                    die;
+                }
+            }
+
             $personalName = isset($_POST['name']) ? $_POST['name'] : NULL;
             $email = isset($_POST['email']) ? $_POST['email'] : NULL;
             $skype = isset($_POST['skype']) ? $_POST['skype'] : NULL;
