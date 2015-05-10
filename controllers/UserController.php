@@ -183,4 +183,7 @@ class UserController extends BaseController {
         $this->renderView(__FUNCTION__);
     }
 
+    protected function getUserRating($userId) {
+        return $this->db->getUserRating($userId);
+    }
 } 

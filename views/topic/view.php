@@ -31,6 +31,7 @@ function data_uri($file, $mime)
         <p><img src="<?php echo data_uri($this->topic['avatar'], $this->topic['mime_type']); ?>" class="img-avatar"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($this->topic['user_id']);?></p>
         <p>Register: <?= $registrationDate->format('Y/m/d H:i') ?></p>
+        <p>Raiting: <?= $this->getUserRating($this->topic['user_id']);?></p>
 
     </div>
 
@@ -66,7 +67,7 @@ function data_uri($file, $mime)
         <p><img src="<?php echo data_uri($answer['avatar'], $answer['mime_type']); ?>" class="img-avatar"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($answer['answer_user_id']);?></p>
         <p>Register: <?= $registrationDate->format('Y/m/d H:i') ?></p>
-
+        <p>Raiting: <?= $this->getUserRating($answer['answer_user_id']);?></p>
     </div>
 </div>
 

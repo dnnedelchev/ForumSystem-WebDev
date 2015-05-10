@@ -107,4 +107,8 @@ class TopicController extends BaseController {
         return $this->usersModel->getCountOfUserAnswersByUserId($userId);
     }
 
+    protected function getUserRating($userId) {
+        return $this->usersModel->getUserRating($userId);
+    }
+
 } 

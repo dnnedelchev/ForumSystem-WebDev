@@ -54,7 +54,7 @@ class UserModel extends BaseModel {
 
     public function getUserInformationByUserId($userId) {
         $statement = $this->db->prepare("
-            SELECT u.username, u.registration_date, u.personal_name,
+            SELECT u.username, u.registration_date, u.personal_name, u.id AS user_id,
 	               u.email, u.birthdate, count(a.id) AS answers_created, u.skype, u.avatar, u.mime_type
             FROM users AS u JOIN answers a
                 ON u.id = a.user_id
@@ -66,7 +66,7 @@ class UserModel extends BaseModel {
         $result = $this->processResults($statement->get_result());
 
         if ($result[0]['username'] === null) {
-            die('лоооошоооооо');
+            die;
         }
 
         return $result[0];
@@ -74,12 +74,24 @@ class UserModel extends BaseModel {
 
     public function getUserInformationByUsername($username) {
         $statement = $this->db->prepare("
-            SELECT u.username, u.registration_date, u.personal_name,
-	               u.email, u.birthdate, count(t.id) AS topics_created,
-	               count(a.id) AS answers_created, u.skype, u.avatar
-            FROM users AS u LEFT JOIN topics AS t
-                ON u.id = t.user_id LEFT JOIN answers a
-                ON u.id = a.user_id
+            SELECT u.username, u.registration_date, u.personal_name, u.id AS user_id,
+                       u.email, u.birthdate, count(question.question_id) AS topics_created,
+                       count(a.id) AS answers_created, u.skype, u.avatar, u.mime_type
+            FROM users AS u LEFT JOIN answers a
+                ON u.id = a.user_id JOIN (
+                                    SELECT answ.topic_id AS question_id, answ.publish_date AS topic_created_at, answ.user_id AS topic_user_id,
+                                        answu.username AS topic_username
+                                    FROM answers AS answ JOIN users AS answu
+                                        ON answ.user_id = answu.id
+                                    WHERE answ.publish_date=(
+                                                        SELECT publish_date
+                                                        FROM answers
+                                                        WHERE topic_id = answ.topic_id
+                                                        ORDER BY publish_date ASC
+                                                        LIMIT 1
+                                                        )
+                                    GROUP BY answ.topic_id
+                                    ) AS question
             WHERE u.username = ?
         ");
         $statement->bind_param('s', $username);
@@ -88,7 +100,7 @@ class UserModel extends BaseModel {
         $result = $this->processResults($statement->get_result());
 
         if ($result[0]['username'] === null) {
-            die('лоооошоооооо');
+            die;
         }
 
         return $result[0];
@@ -135,5 +147,19 @@ class UserModel extends BaseModel {
         $result = $this->processResults($statement->get_result());
 
         return $result[0]['answersCount'];
+    }
+
+    public function getUserRating($userId) {
+        $statement = $this->db->prepare("
+            SELECT count(r.id) AS votes
+            FROM users AS u JOIN answer_user_rates AS r
+                on u.id = r.user_id
+            WHERE u.id = ?
+        ");
+        $statement->bind_param('i', $userId);
+        $statement->execute();
+
+        $result = $this->processResults($statement->get_result())[0]['votes'];
+        return $result;
     }
 } 

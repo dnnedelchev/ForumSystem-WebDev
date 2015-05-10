@@ -23,6 +23,7 @@ function data_uri($file, $mime)
             <p>Registration date: <?php if ($this->currentUser['registration_date']) echo htmlspecialchars($this->currentUser['registration_date']);?></p>
             <p>Birth date: <?php if ($this->currentUser['birthdate']) echo $this->currentUser['birthdate'];?></p>
             <p>Comments created: <?= $this->currentUser['answers_created'];?></p>
+            <p>Raiting: <?= $this->getUserRating($this->currentUser['user_id']);?></p>
         </div>
     </div>
 
