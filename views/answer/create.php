@@ -8,7 +8,7 @@
 
             <div class="form-group">
                 <label class="control-label" for="content">Content</label>
-                <textarea class="form-control" rows="7" id="content" name="content" required></textarea>
+                <textarea class="form-control" rows="7" id="content" name="content" required><?php if (isset($_POST['content'])) echo htmlspecialchars($_POST['content']); ?></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg col-md-offset-1">Submit</button>

@@ -15,17 +15,50 @@ class UserController extends BaseController {
 
     public function register() {
         if ($this->isPost) {
+            if (!isset($_POST['username']) || strlen($_POST['username']) < 3) {
+                $this->addErrorMessage("Username should be at least 3 symbols.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
+            if (!isset($_POST['password']) || strlen($_POST['password']) < 6) {
+                $this->addErrorMessage("Password should be at least 6 symbols.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
+            if (!isset($_POST['repeatPassword']) || strlen($_POST['repeatPassword']) < 6) {
+                $this->addErrorMessage("Password should be at least 6 symbols.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
             $username = $_POST['username'];
             $password = $_POST['password'];
+            $repeatPassword = $_POST['repeatPassword'];
 
-            $userData = $this->db->register($username, $password);
+            $personalName = isset($_POST['name']) ? $_POST['name'] : NULL;
+            $email = isset($_POST['email']) ? $_POST['email'] : NULL;
+            $skype = isset($_POST['skype']) ? $_POST['skype'] : NULL;
+
+
+            if ($repeatPassword !== $password) {
+                $this->addErrorMessage("Pssswords must be equal.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
+
+            $userData = $this->db->register($username, $password, $personalName, $email, $skype);
 
             if ($userData) {
                 $_SESSION['username'] = $username;
-                $_SESSION['userId'] = $userData['userId'];
+                $_SESSION['userId'] = $userData['userid'];
                 $this->isAdmin = $userData['isAdmin'];
                 $_SESSION['isAdmin'] = $userData['isAdmin'];
+                $this->addSuccessMessage("You were successfully registered in.");
                 $this->redirect('home');
+                die;
+            } else {
+                $this->addErrorMessage("There is user register with same username already.");
+                $this->renderView(__FUNCTION__);
+                die;
             }
         }
 
@@ -34,6 +67,16 @@ class UserController extends BaseController {
 
     public function login() {
         if ($this->isPost) {
+            if (!isset($_POST['username']) || strlen($_POST['username']) < 3) {
+                $this->addErrorMessage("Username is required.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
+            if (!isset($_POST['password']) || strlen($_POST['password']) < 6) {
+                $this->addErrorMessage("Password is required.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
             $username = $_POST['username'];
             $password = $_POST['password'];
 
@@ -44,10 +87,13 @@ class UserController extends BaseController {
                 $_SESSION['userId'] = $userData['userid'];
                 $this->isAdmin = $userData['isAdmin'];
                 $_SESSION['isAdmin'] = $userData['isAdmin'];
+                $this->addSuccessMessage("You are now register and log in.");
                 $this->redirectToUrl('/');
-                // TODO $this->redirect()
+                die;
             } else {
-                // TODO error msg
+                $this->addErrorMessage("Invalid username or password");
+                $this->renderView(__FUNCTION__);
+                die;
             }
         }
 
@@ -64,7 +110,6 @@ class UserController extends BaseController {
 
         $this->redirectToUrl('/');
 
-        // TODO redirect and msg.
     }
 
     public function view() {
@@ -73,7 +118,7 @@ class UserController extends BaseController {
         } elseif (func_num_args() === 0) {
             $username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "";
         } else {
-            die("Лошо");
+            die;
         }
 
         if ($_SESSION['username'] === $username) {
@@ -96,7 +141,6 @@ class UserController extends BaseController {
             $avatarData = false;
 
             if (isset($_FILES['avatar'])) {
-                //var_dump($_FILES['avatar']['error'][0] === 0);die;
                 if ($_FILES['avatar']['error'] !== 0) {
                     die("Upload failed with error cod ");
                 }

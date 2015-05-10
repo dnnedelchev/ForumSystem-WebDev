@@ -5,9 +5,10 @@ class UserModel extends BaseModel {
         parent::__construct($args);
     }
 
-    public function register($username, $password) {
+    public function register($username, $password, $personalName, $email, $skype) {
+
         $statement = $this->db->prepare("
-                SELECT id, isAdmin
+                SELECT id, is_admin
                 FROM users
                 WHERE username = ?");
         $statement->bind_param('s', $username);
@@ -20,15 +21,19 @@ class UserModel extends BaseModel {
 
         $hash_pass = password_hash($password, PASSWORD_BCRYPT);
 
-        $insertStatement = $this->db->prepare("INSERT INTO users (username, pass_hash) VALUES (?, ?)");
+        $insertStatement = $this->db->prepare("
+            INSERT INTO
+            users (username, pass_hash, registration_date, personal_name, email, skype)
+            VALUES (?, ?, NOW(), ?, ?, ?)
+        ");
 
-        $insertStatement->bind_param('ss', $username, $hash_pass);
+        $insertStatement->bind_param('sssss', $username, $hash_pass, $personalName, $email, $skype);
         $insertStatement->execute();
 
         $statement->execute();
         $result = $statement->get_result()->fetch_assoc();
 
-        return array('userid' => $result['id'], 'isAdmin' => $result['isAdmin']);
+        return array('userid' => $result['id'], 'isAdmin' => $result['is_admin']);
     }
 
     public function login($username, $password) {

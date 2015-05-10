@@ -11,7 +11,8 @@
                             <div class="form-group">
                                 <label for="username" class="col-md-2 control-label">Username *</label>
                                 <div class="col-md-10">
-                                    <input type="text" class="form-control" id="username" required name="username" placeholder="Username">
+                                    <input type="text" class="form-control" id="username" required name="username" placeholder="Username"
+                                        <?php if (isset($_POST['username'])) echo 'value="' . htmlspecialchars($_POST['username']) . '"'; ?>>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -32,19 +33,22 @@
                             <div class="form-group">
                                 <label for="name" class="col-lg-2 control-label">Name</label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Personal name">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Personal name"
+                                        <?php if (isset($_POST['name'])) echo 'value="' . htmlspecialchars($_POST['name']) . '"'; ?>>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-lg-2 control-label">Email</label>
                                 <div class="col-lg-10">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                        <?php if (isset($_POST['email'])) echo 'value="' . htmlspecialchars($_POST['email']) . '"'; ?>>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="skype" class="col-lg-2 control-label">Skype</label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="skype" name="skype" placeholder="skype">
+                                    <input type="text" class="form-control" id="skype" name="skype" placeholder="skype"
+                                        <?php if (isset($_POST['skype'])) echo 'value="' . htmlspecialchars($_POST['skype']) . '"'; ?>>
                                 </div>
                             </div>
                         </div>

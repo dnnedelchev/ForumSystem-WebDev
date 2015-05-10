@@ -15,7 +15,7 @@ foreach($this->categories as $category) : ?>
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-8">
-                        <h4 class="text-info"><?=htmlspecialchars($category['category_name']);?></h4>
+                        <h4 class="text-info"><?=htmlspecialchars($category['description']);?></h4>
                     </div>
                 </div>
             </div>
@@ -28,3 +28,7 @@ foreach($this->categories as $category) : ?>
     </div>
 <?php endforeach; ?>
 </div>
+
+<?php if ($this->isAdmin) : ?>
+    <a href="/category/create" class="btn btn-primary btn-lg">Add new category</a>
+<?php endif?>

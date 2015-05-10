@@ -9,7 +9,7 @@ class TopicModel extends BaseModel {
         $statement = $this->db->prepare("
                 SELECT a.id AS answer_id, t.title, a.content , a.topic_id, a.user_id AS answer_user_id,
                        au.username AS answer_username, au.registration_date, a.publish_date, au.avatar,
-                       au.mime_type
+                       au.mime_type, a.rating
                 FROM topics AS t JOIN answers AS a
                     ON t.id = a.topic_id RIGHT JOIN users AS au
                     ON a.user_id = au.id
@@ -148,11 +148,11 @@ class TopicModel extends BaseModel {
     public function getTopicInfo($topicId) {
         $statement = $this->db->prepare("
         SELECT t.id AS topic_id, t.title, t.category_id, question.topic_created_at AS created_at, question.user_id, question.content,
-               question.username, question.registration_date, question.avatar, question.mime_type
+               question.username, question.registration_date, question.avatar, question.mime_type, question.rating, question.first_answer_id
         FROM topics AS t JOIN (
                                 SELECT answ.topic_id AS question_id, answ.publish_date AS topic_created_at, answ.user_id AS user_id,
                                     answu.username AS username, answ.content AS content, answu.registration_date AS registration_date,
-                                    answu.avatar, answu.mime_type
+                                    answu.avatar, answu.mime_type, answ.rating, answ.id AS first_answer_id
                                 FROM answers AS answ JOIN users AS answu
                                     ON answ.user_id = answu.id
                                 WHERE answ.publish_date=(

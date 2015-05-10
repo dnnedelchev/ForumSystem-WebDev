@@ -17,12 +17,24 @@ class CategoryModel extends BaseModel {
         return $this->processResults($statement->get_result());
     }
 
+    public function getCategoryInfo($categoryId) {
+        $statement = $this->db->prepare("
+            SELECT id, name, description
+            FROM categories
+            WHERE id = ?;
+        ");
+        $statement->bind_param('i', $categoryId);
+        $statement->execute();
+
+        return $this->processResults($statement->get_result())[0];
+    }
+
 
     public function getAllTopicsByCategoryId($categoryId, $page) {
         $statement = $this->db->prepare("
                     SELECT a.publish_date AS lastAnswerPublishDate, t.title, t.id as topic_id, topic_created_at,
                             topic_user_id, topic_username, au.username AS answer_username,
-                            a.user_id AS answer_user_id, t.views_counter, a.id AS answer_id
+                            a.user_id AS answer_user_id, t.views_counter, a.id AS answer_id, c.name AS category_name
                     FROM answers as a right join topics AS t
                         ON a.topic_id = t.id join categories AS c
                         ON t.category_id = c.id LEFT JOIN users AS au
@@ -112,7 +124,7 @@ class CategoryModel extends BaseModel {
     public function getAllCategories() {
         $statement = $this->db->prepare("
             SELECT c.id AS category_id, c.name AS category_name, c.description, count(t.id) AS topics_count
-            FROM categories AS c JOIN topics AS t
+            FROM categories AS c LEFT JOIN topics AS t
                 on c.id = t.category_id
             GROUP BY c.id
         ");
@@ -122,5 +134,37 @@ class CategoryModel extends BaseModel {
         $result = $this->processResults($statement->get_result());
 
         return $result;
+    }
+
+    public function delete($categoryId) {
+        $statement = $this->db->prepare("
+            DELETE FROM categories
+            WHERE id = ?
+        ");
+
+        $statement->bind_param('i', $categoryId);
+        $statement->execute();
+
+        if ($statement->affected_rows === 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function addNewCategory($categoryName, $description) {
+        $statement = $this->db->prepare("
+            INSERT INTO categories (name, description)
+            VALUES (?, ?)
+        ");
+
+        $statement->bind_param('ss', $categoryName, $description);
+        $statement->execute();
+
+        if ($statement->insert_id) {
+            return $statement->insert_id;
+        }
+
+        return false;
     }
 } 

@@ -15,12 +15,18 @@ class AnswerController extends BaseController{
         $this->answerInfo = $this->answersModel->getAnswerInfoByTopicId($topicId);
 
         if ($this->isPost) {
+            if (!isset($_POST['content']) || strlen($_POST['content']) < 3) {
+                $this->addErrorMessage("Content cannot be empty.");
+                $this->renderView(__FUNCTION__);
+                die;
+            }
             $content =  $_POST['content'];
 
             $answerId = $this->answersModel->create($content, $topicId, $_SESSION['userId']);
 
             if ($answerId) {
                 $redirectUrl = '/topic/view/' . $topicId . '/' . $this->answersModel->getTopicLastPageNumberById($topicId) . '#' . $answerId;
+                $this->addSuccessMessage("Answer was created.");
                 $this->redirectToUrl($redirectUrl);
             }
 
@@ -69,4 +75,35 @@ class AnswerController extends BaseController{
         }
     }
 
+    public function add ($answerId) {
+        $this->authorize();
+        $userId = $_SESSION['userId'];
+        $isVoted = $this->answersModel->isVoted($answerId, $userId);
+        $page = $this->answersModel->getAnswerPage($answerId);
+
+        if ($isVoted) {
+            $this->redirectToUrl('/topic/view/' . $_GET['topicId'] .'/' . $page . '#' .$answerId);
+            die;
+        }
+
+        $this->answersModel->addVote($answerId, $userId);
+        $this->redirectToUrl('/topic/view/' . $_GET['topicId'] .'/' . $page . '#' .$answerId);
+        die;
+    }
+
+    public function substract ($answerId) {
+        $this->authorize();
+        $userId = $_SESSION['userId'];
+        $isVoted = $this->answersModel->isVoted($answerId, $userId);
+        $page = $this->answersModel->getAnswerPage($answerId);
+
+        if ($isVoted) {
+            $this->redirectToUrl('/topic/view/' . $_GET['topicId'] .'/' . $page . '#' .$answerId);
+            die;
+        }
+
+        $this->answersModel->substractVote($answerId, $userId);
+        $this->redirectToUrl('/topic/view/' . $_GET['topicId'] .'/' . $page . '#' .$answerId);
+        die;
+    }
 } 

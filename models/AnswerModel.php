@@ -113,4 +113,78 @@ class AnswerModel extends BaseModel {
 
         return false;
     }
+
+    public function isVoted($answerId, $userId) {
+        $statement = $this->db->prepare("
+            SELECT count(*) AS votes
+            FROM answer_user_rates
+            WHERE answer_id = ? AND user_id = ?;
+        ");
+        $statement->bind_param('ii', $answerId, $userId);
+        $statement->execute();
+        $result = $this->processResults($statement->get_result());
+
+        if ($result[0]['votes'] === 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function addVote($answerId, $userId) {
+        $statement = $this->db->prepare("
+            UPDATE answers
+            SET
+            rating = rating + 1
+            WHERE id = ?;
+        ");
+        $statement->bind_param('i', $answerId);
+        $statement->execute();
+
+        $statement = $this->db->prepare("
+            INSERT INTO answer_user_rates
+            (answer_id, user_id)
+            VALUES
+            (?, ?);
+        ");
+        $statement->bind_param('ii', $answerId, $userId);
+        $statement->execute();
+    }
+
+    public function substractVote($answerId, $userId) {
+        $statement = $this->db->prepare("
+            UPDATE answers
+            SET
+            rating = rating - 1
+            WHERE id = ?;
+        ");
+        $statement->bind_param('i', $answerId);
+        $statement->execute();
+
+        $statement = $this->db->prepare("
+            INSERT INTO answer_user_rates
+            (answer_id, user_id)
+            VALUES
+            (?, ?);
+        ");
+        $statement->bind_param('ii', $answerId, $userId);
+        $statement->execute();
+    }
+
+    public function getAnswerPage($answerId) {
+        $statement = $this->db->prepare("
+            SELECT COUNT(a.id) AS results
+            FROM answers AS a JOIN topics AS t
+                ON a.topic_id = t.id
+            WHERE a.publish_date < (SELECT publish_date FROM answers WHERE id = ?)
+        ");
+        $statement->bind_param('i', $answerId);
+        $statement->execute();
+
+        $results = $this->processResults($statement->get_result())[0]['results'];
+        $results = ($results === 0) ? 1 : $results;
+        $page = ceil($results / BaseModel::DEFAULT_PAGE_SIZE);
+
+        return $page;
+    }
 } 

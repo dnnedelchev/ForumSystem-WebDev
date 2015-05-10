@@ -1,9 +1,5 @@
-<!--<ul>-->
-<!--    --><?php ////foreach($this->topics as $topic) :?>
-<!--        <li><a href="/topic/view/--><?//= $topic['id'] ?><!--">--><?//= $topic['title'] ?><!--</a></li>-->
-<!--    --><?php ////endforeach?>
-<!--</ul>-->
 <div class="row">
+    <h1><a href="#"><?= htmlspecialchars($this->categoryName); ?></a></h1>
 <?php
 $lastPageNumber = 0;
 foreach($this->topics as $topic) : ?>
@@ -91,6 +87,9 @@ $endIndex = ($startIndex + 5 >= $categoryLastPage) ? $categoryLastPage : $startI
     </div>
     <div class="col-md-6">
         <div class="pager">
+            <?php if ($this->isAdmin) : ?>
+                <a href="/category/delete/<?=$this->categoryId;?>" class="btn btn-primary btn-lg">Delete category</a>
+            <?php endif?>
             <a href="/topic/create/<?=$this->categoryId;?>" class="btn btn-primary btn-lg pull-right">Add new topic.</a>
         </div>
     </div>

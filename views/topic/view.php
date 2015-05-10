@@ -1,13 +1,16 @@
 <?php
 function data_uri($file, $mime)
 {
+    if (!isset($file)) {
+        return '/content/default-user.png';
+    }
     $base64 = base64_encode($file);
     return ('data:' . $mime . ';base64,' . $base64);
 }
 ?>
 
 <div class="row">
-    <h1><a href="/view/topic/1/1"><?= htmlspecialchars($this->topic['title']); ?></a></h1>
+    <h1><a href="#"><?= htmlspecialchars($this->topic['title']); ?></a></h1>
 
     <div class="col-md-8">
         <div class="jumbotron" id="jumbo">
@@ -17,8 +20,9 @@ function data_uri($file, $mime)
     </div>
 
     <div class="col-md-1">
-        <a href="#" class="btn btn-primary btn-xs">+</a>
-        <a href="#" class="btn btn-primary btn-xs">-</a>
+        <a href="/answer/add/<?= $this->topic['first_answer_id'];?>?topicId=<?= $this->topic['topic_id'];?>" class="btn btn-primary btn-xs">+</a>
+        <a href="/answer/substract/<?= $this->topic['first_answer_id'];?>?topicId=<?= $this->topic['topic_id'];?>" class="btn btn-primary btn-xs">-</a>
+        <h2><?= $this->topic['rating'];?></h2>
     </div>
 
     <div class="col-md-3">
@@ -39,20 +43,27 @@ function data_uri($file, $mime)
         ?>
 
 <div class="row" id="<?= $answer['answer_id'];?>" >
-    <div class="col-md-9">
+    <div class="col-md-8">
         <div class="jumbotron" id="jumbo">
             <h6>Added at: <?= $answer['publish_date']; ?></h6>
             <p><?= htmlspecialchars($answer['content']); ?></p>
 
+        <?php if ($this->isAdmin) : ?>
             <a href="/answer/edit/<?=$answer['answer_id']?>" class="btn btn-primary">Edit</a>
             <a href="/answer/delete/<?=$answer['answer_id']?>" class="btn btn-primary">Delete</a>
-
+        <?php endif ?>
         </div>
+    </div>
+
+    <div class="col-md-1">
+        <a href="/answer/add/<?= $answer['answer_id'];?>?topicId=<?= $this->topic['topic_id'];?>" class="btn btn-primary btn-xs">+</a>
+        <a href="/answer/substract/<?= $answer['answer_id'];?>?topicId=<?= $this->topic['topic_id'];?>" class="btn btn-primary btn-xs">-</a>
+        <h2><?= $answer['rating'];?></h2>
     </div>
 
     <div class="col-md-3">
         <p><a href="/user/view/<?= htmlspecialchars($answer['answer_username']); ?>"><?= htmlspecialchars($answer['answer_username']);?></a></p>
-        <p><img src="<?php echo data_uri($this->topic['avatar'], $this->topic['mime_type']); ?>" class="img-avatar"/></p>
+        <p><img src="<?php echo data_uri($answer['avatar'], $answer['mime_type']); ?>" class="img-avatar"/></p>
         <p>Answers: <?= $this->getCountOfUserAnswers($answer['answer_user_id']);?></p>
         <p>Register: <?= $registrationDate->format('Y/m/d H:i') ?></p>
 
@@ -60,8 +71,6 @@ function data_uri($file, $mime)
 </div>
 
     <?php endforeach; ?>
-
-<!--a href="/answer/create/<?php// $this->topicContent['id']; ?>">Add new answer.</a-->
 
 
 <div class="row">
@@ -79,7 +88,7 @@ function data_uri($file, $mime)
                 $isEndDisabledClass = 'class="disabled"';
             }
             ?>
-            <li <?= $isStartDisabledClass?>><a href="/category/view/<?=$this->topic['topic_id'];?>/1">«</a></li>
+            <li <?= $isStartDisabledClass?>><a href="/topic/view/<?=$this->topic['topic_id'];?>/1">«</a></li>
             <?php
             if ($this->currentPage <= 5) {
                 $startIndex = 1;
@@ -96,10 +105,10 @@ function data_uri($file, $mime)
                 } else {
                     $isActiveClass = '';
                 } ?>
-                <li <?= $isActiveClass; ?>><a href="/category/view/<?=$this->topic['topic_id'];?>/<?= $i;?>"><?= $i?></a></li>
+                <li <?= $isActiveClass; ?>><a href="/topic/view/<?=$this->topic['topic_id'];?>/<?= $i;?>"><?= $i?></a></li>
 
             <?php endfor ?>
-            <li><a href="/category/view/<?=$this->topic['topic_id'];?>/<?= $lastPageNumber;?>" <?= $isEndDisabledClass?>>»</a></li>
+            <li><a href="/topic/view/<?=$this->topic['topic_id'];?>/<?= $lastPageNumber;?>" <?= $isEndDisabledClass?>>»</a></li>
         </ul>
     </div>
     <div class="col-md-6">
